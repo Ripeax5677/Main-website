@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404notfound // SYSTEM BOOT</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #05050a;
+  overflow: hidden;
+  color: white;
+}
+
+/* MATRIX */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -3;
+}
+
+.glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  background: #7c5cff;
+  filter: blur(200px);
+  opacity: 0.12;
+  top: -200px;
+  left: -200px;
+}
+
+/* TOP */
+.topbar {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+#status {
+  font-size: 1rem;
+  letter-spacing: 4px;
+  color: #7c5cff;
+  text-shadow: 0 0 15px #7c5cff;
+}
+
+.underline {
+  width: 100%;
+  height: 2px;
+  background: #7c5cff;
+  box-shadow: 0 0 10px #7c5cff;
+}
+
+/* AUTO LOGIN SCREEN */
+.login {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+  background: rgba(255,255,255,0.03);
+  padding: 30px;
+  border-radius: 15px;
+  border: 1px solid rgba(124,92,255,0.3);
+  backdrop-filter: blur(10px);
+}
+
+.auto {
+  margin-top: 10px;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* ACCESS */
+.access {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 0;
+  transition: 1s;
+}
+
+.access h1 {
+  color: #00ff88;
+  font-size: 2.5rem;
+  text-shadow: 0 0 20px #00ff88;
+}
+
+.access.active {
+  opacity: 1;
+}
+
+/* MAIN */
+.container {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
+}
+
+h1 span {
+  color: #7c5cff;
+  text-shadow: 0 0 20px #7c5cff;
+}
+
+.links {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+a {
+  padding: 12px;
+  border: 1px solid rgba(124,92,255,0.4);
+  text-decoration: none;
+  color: white;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+}
+
+a:hover {
+  background: rgba(124,92,255,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+<div class="glow"></div>
+
+<!-- TOP -->
+<div class="topbar">
+  <div id="status">BOOTING SYSTEM...</div>
+  <div class="underline"></div>
+</div>
+
+<!-- AUTO LOGIN -->
+<div class="login" id="loginBox">
+  <h2>AUTH SYSTEM</h2>
+  <p class="auto">Generating credentials...</p>
+  <p class="auto" id="user">USER: SYSTEM_NODE</p>
+  <p class="auto" id="pass">KEY: ************</p>
+</div>
+
+<!-- ACCESS -->
+<div class="access" id="access">
+  <h1>ACCESS GRANTED</h1>
+</div>
+
+<!-- MAIN -->
+<div class="container" id="main">
+  <h1>Hi, I'm <span>404notfound</span></h1>
+
+  <div class="links">
+    <a href="https://m.twitch.tv/alex_auf_tour?desktop-redirect=true">🎥 Client Twitch</a>
+    <a href="https://alex-auf-tour-shop.de">🛒 Client Shop</a>
+    <a href="https://portfolio.404notfound.bar">💼 Portfolio</a>
+  </div>
+</div>
+
+<script>
+// ===== MATRIX =====
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let letters = "01".split("");
+let fontSize = 14;
+let columns = canvas.width / fontSize;
+let drops = [];
+
+for (let i = 0; i < columns; i++) drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle = "#7c5cff";
+  ctx.font = fontSize + "px monospace";
+
+  for (let i = 0; i < drops.length; i++) {
+    let text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+    if (drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+setInterval(draw, 33);
+
+// ===== BOOT TEXT =====
+const status = document.getElementById("status");
+
+const msgs = [
+  "INITIALIZING...",
+  "SCANNING NODE...",
+  "GENERATING ACCESS KEY...",
+  "AUTH VALIDATED"
+];
+
+let i = 0;
+
+setInterval(() => {
+  if (i < msgs.length) status.innerText = msgs[i++];
+}, 900);
+
+// ===== AUTO LOGIN FLOW =====
+window.onload = () => {
+  setTimeout(() => {
+    document.getElementById("loginBox").style.opacity = "0";
+
+    setTimeout(() => {
+      document.getElementById("access").classList.add("active");
+    }, 800);
+
+    setTimeout(() => {
+      document.getElementById("access").style.display = "none";
+      document.getElementById("main").style.display = "block";
+    }, 2800);
+
+  }, 3000);
+};
+</script>
+
+</body>
+</html>
