@@ -773,16 +773,11 @@ window.addEventListener("load", () => {
     document.getElementById("loginBox").classList.add("fade");
 
     setTimeout(() => {
-      // Show access granted
-      document.getElementById("accessScreen").classList.add("active");
+      // Hide boot overlay and show navbar
+      document.getElementById("bootOverlay").classList.add("hidden");
+      document.getElementById("navbar").style.display = "flex";
+      document.getElementById("main").classList.add("show");
       clearInterval(bootInterval);
-
-      setTimeout(() => {
-        // Hide boot overlay and show navbar
-        document.getElementById("bootOverlay").classList.add("hidden");
-        document.getElementById("navbar").style.display = "flex";
-        document.getElementById("main").classList.add("show");
-      }, 1500);
     }, 800);
   }, 3500);
 });
